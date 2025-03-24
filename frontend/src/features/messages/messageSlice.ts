@@ -1,6 +1,6 @@
 import { IMessage } from "../../types";
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchMessages } from "./messageThunks.ts";
+import { addNewMessage, fetchMessages } from "./messageThunks.ts";
 import { RootState } from "../../app/store.ts";
 
 interface MessageState {
@@ -25,19 +25,32 @@ const messageSlice = createSlice({
         state.fetchLoading = true;
         state.error = false;
       })
-      .addCase(fetchMessages.fulfilled, (state, {payload: messages}) => {
+      .addCase(fetchMessages.fulfilled, (state, { payload: messages }) => {
         state.items = messages;
         state.fetchLoading = false;
       })
       .addCase(fetchMessages.rejected, (state) => {
         state.fetchLoading = false;
         state.error = true;
+      })
+
+      .addCase(addNewMessage.pending, (state) => {
+        state.fetchLoading = true;
+        state.error = false;
+      })
+      .addCase(addNewMessage.fulfilled, (state) => {
+        state.fetchLoading = false;
+      })
+      .addCase(addNewMessage.rejected, (state) => {
+        state.fetchLoading = false;
+        state.error = true;
       });
-  }
+  },
 });
 
 export const selectMessages = (state: RootState) => state.message.items;
-export const selectFetchLoading = (state: RootState) => state.message.fetchLoading;
+export const selectFetchLoading = (state: RootState) =>
+  state.message.fetchLoading;
 export const selectError = (state: RootState) => state.message.error;
 
 export const messageReducer = messageSlice.reducer;
