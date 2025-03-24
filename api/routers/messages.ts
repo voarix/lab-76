@@ -12,15 +12,15 @@ messageRouter.post("/", async (req, res) => {
     return;
   }
 
-  const newMessage = await fileDb.addNewMessage({ author, message });
+  const newMessage = await fileDb.addNewMessage({author, message});
   res.send(newMessage);
 });
 
 messageRouter.get("/", async (req, res) => {
-  let messages : Message[] = await fileDb.getAllMessages();
+  let messages: Message[] = await fileDb.getAllMessages();
   const queryDate = req.query.datetime as string;
 
-  if(queryDate){
+  if (queryDate) {
     const date = new Date(queryDate);
 
     if (isNaN(date.getDate())) {
@@ -32,10 +32,10 @@ messageRouter.get("/", async (req, res) => {
       const dateMessage = new Date(message.datetime);
       return dateMessage > date;
     });
-
-    const lastMessages = messages.slice(-30);
-    res.send(lastMessages);
   }
+
+  const lastMessages = messages.slice(-30);
+  res.send(lastMessages);
 });
 
 export default messageRouter;
